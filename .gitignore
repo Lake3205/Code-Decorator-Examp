@@ -7,7 +7,14 @@ __pycache__/
 *$py.class
 *.so
 
-# Java
+# Flask
+instance/
+.webassets-cache
+.env
+venv/
+env/
+
+# Java (legacy)
 *.jar
 *.war
 *.ear
