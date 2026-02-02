@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decorator Pattern Examples</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .example-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .example-card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .decorator-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .decorator-btn {
+            padding: 10px 20px;
+            background: #f0f0f0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .decorator-btn:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .decorator-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .encrypt-shift {
+            width: 100px;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-left: 10px;
+        }
+
+        .result-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            min-height: 80px;
+        }
+
+        .result-content {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            word-wrap: break-word;
+        }
+
+        .result-cost {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .predefined-examples {
+            margin-top: 30px;
+        }
+
+        .example-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .example-item:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .example-item h4 {
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .example-item p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-top: 30px;
+        }
+
+        .info-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefits-list li {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding-left: 40px;
+            position: relative;
+        }
+
+        .benefits-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 15px;
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .order-indicator {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎨 Decorator Pattern Examples</h1>
+            <p>Interactive demonstration of the Decorator Design Pattern in Python</p>
+        </header>
+
+        <div class="examples-grid">
+            <!-- Coffee Shop Example -->
+            <div class="example-card">
+                <h2>☕ Coffee Shop Example</h2>
+                
+                <div class="section">
+                    <h3>Build Your Coffee</h3>
+                    <div class="decorator-options" id="coffee-decorators">
+                        <button class="decorator-btn" data-decorator="milk">Milk (+$0.50)</button>
+                        <button class="decorator-btn" data-decorator="sugar">Sugar (+$0.20)</button>
+                        <button class="decorator-btn" data-decorator="whipped_cream">Whipped Cream (+$0.70)</button>
+                        <button class="decorator-btn" data-decorator="vanilla">Vanilla (+$0.60)</button>
+                        <button class="decorator-btn" data-decorator="caramel">Caramel (+$0.60)</button>
+                    </div>
+                    <div class="order-indicator" id="coffee-order">Click decorators to add them (click multiple times to add same decorator multiple times)</div>
+                    
+                    <div class="result-box" id="coffee-result">
+                        <div class="result-content">Simple Coffee</div>
+                        <div class="result-cost">Cost: $2.00</div>
+                    </div>
+                </div>
+
+                <div class="predefined-examples">
+                    <h3>Predefined Examples</h3>
+                    <div id="coffee-examples"></div>
+                </div>
+            </div>
+
+            <!-- Text Formatter Example -->
+            <div class="example-card">
+                <h2>📝 Text Formatter Example</h2>
+                
+                <div class="section">
+                    <h3>Format Your Text</h3>
+                    <input type="text" class="text-input" id="text-input" placeholder="Enter text to format..." value="Hello, World!">
+                    
+                    <div class="decorator-options" id="text-decorators">
+                        <button class="decorator-btn" data-decorator="bold">Bold (+$0.30)</button>
+                        <button class="decorator-btn" data-decorator="italic">Italic (+$0.30)</button>
+                        <button class="decorator-btn" data-decorator="underline">Underline (+$0.20)</button>
+                        <button class="decorator-btn" data-decorator="uppercase">Uppercase (+$0.50)</button>
+                        <button class="decorator-btn" data-decorator="encrypt">
+                            Encrypt (+$1.50)
+                            <input type="number" class="encrypt-shift" id="encrypt-shift" value="3" min="1" max="25" onclick="event.stopPropagation()">
+                        </button>
+                    </div>
+                    <div class="order-indicator" id="text-order">Decorators are applied in the order you click them</div>
+                    
+                    <div class="result-box" id="text-result">
+                        <div class="result-content" id="text-content">Hello, World!</div>
+                        <div class="result-cost">Cost: $1.00</div>
+                    </div>
+                </div>
+
+                <div class="predefined-examples">
+                    <h3>Predefined Examples</h3>
+                    <div id="text-examples"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Section -->
+        <div class="info-section">
+            <h2>📚 About the Decorator Pattern</h2>
+            <p style="margin-bottom: 20px;">
+                The <strong>Decorator Pattern</strong> is a structural design pattern that allows you to dynamically add new behaviors 
+                or responsibilities to objects without modifying their code. It provides a flexible alternative to subclassing for 
+                extending functionality.
+            </p>
+            
+            <h3 style="margin-top: 20px; margin-bottom: 15px;">Key Benefits:</h3>
+            <ul class="benefits-list">
+                <li>Each decorator adds one specific responsibility</li>
+                <li>Decorators can be combined in any order</li>
+                <li>The same decorator can be applied multiple times</li>
+                <li>No modification needed to the base classes</li>
+                <li>Easy to add new decorators without changing existing code</li>
+                <li>Cost/complexity accumulates transparently as decorators are added</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Coffee Shop Logic
+        let coffeeDecorators = [];
+        
+        document.getElementById('coffee-decorators').addEventListener('click', (e) => {
+            if (e.target.classList.contains('decorator-btn')) {
+                const decorator = e.target.dataset.decorator;
+                coffeeDecorators.push(decorator);
+                e.target.classList.add('active');
+                setTimeout(() => e.target.classList.remove('active'), 300);
+                updateCoffee();
+            }
+        });
+
+        async function updateCoffee() {
+            const response = await fetch('/api/coffee', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ decorators: coffeeDecorators })
+            });
+            const data = await response.json();
+            document.querySelector('#coffee-result .result-content').textContent = data.description;
+            document.querySelector('#coffee-result .result-cost').textContent = `Cost: ${data.cost}`;
+            document.getElementById('coffee-order').textContent = 
+                coffeeDecorators.length > 0 
+                    ? `Applied decorators: ${coffeeDecorators.join(' → ')}`
+                    : 'Click decorators to add them (click multiple times to add same decorator multiple times)';
+        }
+
+        // Reset coffee
+        document.getElementById('coffee-result').addEventListener('dblclick', () => {
+            coffeeDecorators = [];
+            updateCoffee();
+        });
+
+        // Text Formatter Logic
+        let textDecorators = [];
+        
+        document.getElementById('text-decorators').addEventListener('click', (e) => {
+            if (e.target.classList.contains('decorator-btn')) {
+                const decorator = e.target.dataset.decorator;
+                textDecorators.push(decorator);
+                e.target.classList.add('active');
+                setTimeout(() => e.target.classList.remove('active'), 300);
+                updateText();
+            }
+        });
+
+        document.getElementById('text-input').addEventListener('input', () => {
+            textDecorators = [];
+            updateText();
+        });
+
+        async function updateText() {
+            const text = document.getElementById('text-input').value;
+            const encryptShift = parseInt(document.getElementById('encrypt-shift').value);
+            
+            const response = await fetch('/api/text', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    text: text,
+                    decorators: textDecorators,
+                    encrypt_shift: encryptShift
+                })
+            });
+            const data = await response.json();
+            document.getElementById('text-content').innerHTML = data.content;
+            document.querySelector('#text-result .result-cost').textContent = `Cost: ${data.cost}`;
+            document.getElementById('text-order').textContent = 
+                textDecorators.length > 0 
+                    ? `Applied decorators: ${textDecorators.join(' → ')}`
+                    : 'Decorators are applied in the order you click them';
+        }
+
+        // Reset text
+        document.getElementById('text-result').addEventListener('dblclick', () => {
+            textDecorators = [];
+            updateText();
+        });
+
+        // Load predefined examples
+        async function loadCoffeeExamples() {
+            const response = await fetch('/api/coffee/examples');
+            const examples = await response.json();
+            const container = document.getElementById('coffee-examples');
+            
+            examples.forEach(example => {
+                const div = document.createElement('div');
+                div.className = 'example-item';
+                div.innerHTML = `
+                    <h4>${example.name}</h4>
+                    <p>${example.description} - ${example.cost}</p>
+                `;
+                div.addEventListener('click', () => {
+                    coffeeDecorators = [...example.decorators];
+                    updateCoffee();
+                });
+                container.appendChild(div);
+            });
+        }
+
+        async function loadTextExamples() {
+            const response = await fetch('/api/text/examples');
+            const examples = await response.json();
+            const container = document.getElementById('text-examples');
+            
+            examples.forEach(example => {
+                const div = document.createElement('div');
+                div.className = 'example-item';
+                div.innerHTML = `
+                    <h4>${example.name}</h4>
+                    <p>${example.content} - ${example.cost}</p>
+                `;
+                div.addEventListener('click', () => {
+                    document.getElementById('text-input').value = example.text;
+                    textDecorators = [...example.decorators];
+                    if (example.encrypt_shift) {
+                        document.getElementById('encrypt-shift').value = example.encrypt_shift;
+                    }
+                    updateText();
+                });
+                container.appendChild(div);
+            });
+        }
+
+        // Initialize
+        loadCoffeeExamples();
+        loadTextExamples();
+    </script>
+</body>
+</html>
