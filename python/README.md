@@ -1,8 +1,36 @@
-# Python Decorator Pattern Example
+# Python Decorator Pattern Examples
 
-## Coffee Shop Implementation
+This directory contains Python implementations of the Decorator Pattern with two complete examples.
 
-This example demonstrates the Decorator Pattern using a coffee ordering system.
+## 🚀 Quick Start
+
+### Interactive Web GUI
+
+The best way to explore these examples is through the interactive web interface:
+
+```bash
+# From the root directory
+pip install -r requirements.txt
+python app.py
+```
+
+Then visit `http://localhost:5000` in your browser!
+
+### Command Line
+
+You can also run the examples directly:
+
+```bash
+# Coffee Shop Example
+python coffee_shop.py
+
+# Text Formatter Example
+python text_formatter.py
+```
+
+## ☕ Coffee Shop Example
+
+Demonstrates the Decorator Pattern using a coffee ordering system.
 
 ### Components
 
@@ -11,32 +39,41 @@ This example demonstrates the Decorator Pattern using a coffee ordering system.
 3. **CoffeeDecorator (Decorator)**: Base class for all decorators
 4. **Concrete Decorators**: Milk, Sugar, WhippedCream, Vanilla, Caramel
 
-### How to Run
+### Key Features
 
-```bash
-python coffee_shop.py
-```
+- Dynamic composition of coffee orders
+- Multiple decorators can be stacked
+- Same decorator can be applied multiple times (e.g., double sugar)
+- Cost accumulates with each decorator
+- Description builds dynamically
 
-### Expected Output
+## 📝 Text Formatter Example
 
-The program demonstrates various coffee orders with different combinations of decorators, showing:
-- Basic coffee ($2.00)
-- Coffee with milk ($2.50)
-- Coffee with milk and sugar ($2.70)
-- Deluxe coffee with multiple additions ($4.40)
-- Coffee with double sugar ($2.90)
+Demonstrates the Decorator Pattern using a text formatting system.
 
-### Key Concepts Demonstrated
+### Components
 
-1. **Dynamic Composition**: Decorators can be added at runtime
-2. **Multiple Decorators**: Stack multiple decorators on the same object
-3. **Repeated Decorators**: Apply the same decorator multiple times
-4. **Cost Calculation**: Each decorator adds its own cost
-5. **Description Building**: Each decorator extends the description
+1. **Text (Interface)**: Base interface for all text objects
+2. **PlainText (Concrete Component)**: Basic text implementation
+3. **TextDecorator (Decorator)**: Base class for all decorators
+4. **Concrete Decorators**:
+   - **BoldDecorator**: Wraps text with HTML `<b>` tags
+   - **ItalicDecorator**: Wraps text with HTML `<i>` tags
+   - **UnderlineDecorator**: Wraps text with HTML `<u>` tags
+   - **UpperCaseDecorator**: Converts text to uppercase
+   - **EncryptDecorator**: Applies Caesar cipher encryption
 
-### Design Benefits
+### Key Features
 
-- ✅ No need to create a class for every combination (Milk+Sugar, Vanilla+Caramel, etc.)
-- ✅ Easy to add new decorators (e.g., Chocolate, Cinnamon) without modifying existing code
+- Order of decorators matters (encrypt then uppercase vs uppercase then encrypt)
+- HTML formatting decorators can be nested
+- Encryption with configurable shift value
+- Processing cost increases with each decorator
+
+## 🎨 Design Benefits
+
+- ✅ No class explosion - no need for every combination
+- ✅ Easy to add new decorators without modifying existing code
 - ✅ Flexible composition at runtime
-- ✅ Single Responsibility: Each decorator does one thing
+- ✅ Single Responsibility: Each decorator handles one transformation
+- ✅ Open/Closed Principle: Open for extension, closed for modification

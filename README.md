@@ -54,26 +54,35 @@ Component (interface)
 
 ## Code Examples
 
-This repository contains working examples in multiple languages:
+This repository contains Python implementations with an interactive web GUI:
 
-- [Python Implementation](./python/) - Coffee Shop Example
-- [Java Implementation](./java/) - Text Formatter Example
+- **Coffee Shop Example** - Demonstrates decorators by building customized coffee orders
+- **Text Formatter Example** - Shows text formatting with various decorators (bold, italic, underline, uppercase, encryption)
 
-### Quick Python Example
+### 🌐 Interactive Web GUI
 
-```python
-# Run the Python example
-cd python
-python coffee_shop.py
-```
-
-### Quick Java Example
+Experience the decorator pattern in action with our interactive web interface:
 
 ```bash
-# Run the Java example
-cd java
-javac *.java
-java Main
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the web application
+python app.py
+```
+
+Then open your browser to `http://localhost:5000` to see the interactive examples!
+
+### 📝 Command Line Examples
+
+You can also run the examples from the command line:
+
+```bash
+# Coffee Shop Example
+python python/coffee_shop.py
+
+# Text Formatter Example
+python python/text_formatter.py
 ```
 
 ## Benefits
