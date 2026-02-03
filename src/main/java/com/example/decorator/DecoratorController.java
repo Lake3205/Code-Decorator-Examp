@@ -80,6 +80,9 @@ public class DecoratorController {
                     case "special_sauce":
                         burger = new SpecialSauce(burger);
                         break;
+                    case "patty":
+                        burger = new Patty(burger);
+                        break;
                     default:
                         // Ignore unknown decorators
                         break;

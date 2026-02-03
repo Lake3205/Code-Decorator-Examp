@@ -4,6 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Decorator Pattern Examples</title>
+    <style>
+        /* Simple Burger Visual */
+        .burger-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+            min-height: 120px;
+        }
+        .burger-layer {
+            width: 100px;
+            text-align: center;
+            font-size: 12px;
+            color: white;
+            font-weight: bold;
+            border-radius: 4px;
+            margin: 1px 0;
+        }
+        .bun-top {
+            background: #d4923a;
+            height: 30px;
+            line-height: 30px;
+            border-radius: 50px 50px 4px 4px;
+            width: 100px;
+        }
+        .bun-bottom {
+            background: #d4923a;
+            height: 20px;
+            line-height: 20px;
+            border-radius: 4px 4px 8px 8px;
+            width: 110px;
+        }
+        .patty {
+            background: #5c3d2e;
+            height: 18px;
+            line-height: 18px;
+            width: 105px;
+        }
+        .cheese {
+            background: #ffd700;
+            height: 10px;
+            line-height: 10px;
+            width: 100px;
+            color: #333;
+        }
+        .lettuce {
+            background: #4caf50;
+            height: 12px;
+            line-height: 12px;
+            width: 110px;
+            border-radius: 2px;
+        }
+        .tomato {
+            background: #e74c3c;
+            height: 10px;
+            line-height: 10px;
+            width: 95px;
+        }
+        .bacon {
+            background: #8b4513;
+            height: 8px;
+            line-height: 8px;
+            width: 90px;
+        }
+        .pickles {
+            background: #6b8e23;
+            height: 8px;
+            line-height: 8px;
+            width: 85px;
+        }
+        .onions {
+            background: #dda0dd;
+            height: 8px;
+            line-height: 8px;
+            width: 90px;
+        }
+        .special_sauce {
+            background: #ff6347;
+            height: 6px;
+            line-height: 6px;
+            width: 80px;
+        }
+    </style>
 </head>
 <body>
     <div>
@@ -40,6 +123,7 @@
                 <div>
                     <h3>Build Your Burger</h3>
                     <div id="burger-decorators">
+                        <button data-decorator="patty">Patty (+$2.50)</button>
                         <button data-decorator="cheese">Cheese (+$0.75)</button>
                         <button data-decorator="lettuce">Lettuce (+$0.30)</button>
                         <button data-decorator="tomato">Tomato (+$0.40)</button>
@@ -49,6 +133,12 @@
                         <button data-decorator="special_sauce">Special Sauce (+$0.50)</button>
                     </div>
                     <div id="burger-order">Click decorators to add toppings (click multiple times to add extra)</div>
+                    
+                    <!-- Visual Burger -->
+                    <div class="burger-visual" id="burger-visual">
+                        <div class="burger-layer patty"></div>
+                        <div class="burger-layer bun-bottom"></div>
+                    </div>
                     
                     <div id="burger-result">
                         <div>Simple Burger</div>
@@ -123,6 +213,7 @@
                 body: JSON.stringify({ decorators: coffeeDecorators })
             });
             const data = await response.json();
+            console.log('Coffee:', data);
             document.querySelector('#coffee-result div:first-child').textContent = data.description;
             document.querySelector('#coffee-result div:last-child').textContent = `Cost: ${data.cost}`;
             document.getElementById('coffee-order').textContent = 
@@ -167,6 +258,7 @@
                 })
             });
             const data = await response.json();
+            console.log('Text:', data);
             document.getElementById('text-content').innerHTML = data.content;
             document.querySelector('#text-result div:last-child').textContent = `Cost: ${data.cost}`;
             document.getElementById('text-order').textContent = 
@@ -199,18 +291,38 @@
                 body: JSON.stringify({ decorators: burgerDecorators })
             });
             const data = await response.json();
+            console.log('Burger:', data);
             document.querySelector('#burger-result div:first-child').textContent = data.description;
             document.querySelector('#burger-result div:last-child').textContent = `Cost: ${data.cost}`;
             document.getElementById('burger-order').textContent = 
                 burgerDecorators.length > 0 
                     ? `Applied toppings: ${burgerDecorators.join(' → ')}`
                     : 'Click decorators to add toppings (click multiple times to add extra)';
+            
+            // Update visual burger
+            renderBurgerVisual();
+        }
+
+        function renderBurgerVisual() {
+            const visual = document.getElementById('burger-visual');
+            let html = '<div class="burger-layer bun-top"></div>';
+            
+            // Add toppings in reverse order (top to bottom)
+            const toppings = [...burgerDecorators].reverse();
+            for (const topping of toppings) {
+                html += `<div class="burger-layer ${topping}"></div>`;
+            }
+            
+            html += '<div class="burger-layer patty"></div>';
+            html += '<div class="burger-layer bun-bottom"></div>';
+            visual.innerHTML = html;
         }
 
         // Reset burger
         document.getElementById('burger-result').addEventListener('dblclick', () => {
             burgerDecorators = [];
             updateBurger();
+            renderBurgerVisual();
         });
     </script>
 </body>
