@@ -93,18 +93,57 @@ public class DecoratorController {
     public ResponseEntity<List<Map<String, Object>>> coffeeExamples() {
         List<Map<String, Object>> examples = new ArrayList<>();
         
+        // Example 1: Basic Coffee
+        // SimpleCoffee.getDescription() = "Simple Coffee"
+        // SimpleCoffee.getCost() = 2.00
+        Coffee coffee1 = new SimpleCoffee();
         examples.add(createExample("Basic Coffee", 
-            Arrays.asList(), "Simple Coffee", "$2.00"));
+            Arrays.asList(), coffee1.getDescription(), String.format("$%.2f", coffee1.getCost())));
+        
+        // Example 2: Coffee with Milk
+        // Milk wraps SimpleCoffee
+        // Milk.getDescription() = coffee.getDescription() + ", Milk"
+        // Milk.getCost() = coffee.getCost() + 0.50
+        Coffee coffee2 = new Milk(new SimpleCoffee());
         examples.add(createExample("Coffee with Milk", 
-            Arrays.asList("milk"), "Simple Coffee, Milk", "$2.50"));
+            Arrays.asList("milk"), coffee2.getDescription(), String.format("$%.2f", coffee2.getCost())));
+        
+        // Example 3: Coffee with Milk and Sugar
+        // Sugar wraps (Milk wraps SimpleCoffee)
+        // Final: SimpleCoffee -> Milk -> Sugar
+        Coffee coffee3 = new Sugar(new Milk(new SimpleCoffee()));
         examples.add(createExample("Coffee with Milk and Sugar", 
-            Arrays.asList("milk", "sugar"), "Simple Coffee, Milk, Sugar", "$2.70"));
+            Arrays.asList("milk", "sugar"), coffee3.getDescription(), String.format("$%.2f", coffee3.getCost())));
+        
+        // Example 4: Deluxe Coffee
+        // Chain: SimpleCoffee -> Milk -> Vanilla -> WhippedCream -> Caramel
+        // Each decorator adds its cost and description
+        Coffee coffee4 = new Caramel(
+            new WhippedCream(
+                new Vanilla(
+                    new Milk(
+                        new SimpleCoffee()
+                    )
+                )
+            )
+        );
         examples.add(createExample("Deluxe Coffee", 
             Arrays.asList("milk", "vanilla", "whipped_cream", "caramel"), 
-            "Simple Coffee, Milk, Vanilla, Whipped Cream, Caramel", "$4.40"));
+            coffee4.getDescription(), String.format("$%.2f", coffee4.getCost())));
+        
+        // Example 5: Extra Sweet Coffee
+        // Demonstrates adding same decorator multiple times
+        // Chain: SimpleCoffee -> Sugar -> Sugar -> Milk
+        Coffee coffee5 = new Milk(
+            new Sugar(
+                new Sugar(
+                    new SimpleCoffee()
+                )
+            )
+        );
         examples.add(createExample("Extra Sweet Coffee", 
             Arrays.asList("sugar", "sugar", "milk"), 
-            "Simple Coffee, Sugar, Sugar, Milk", "$2.90"));
+            coffee5.getDescription(), String.format("$%.2f", coffee5.getCost())));
         
         return ResponseEntity.ok(examples);
     }
@@ -113,24 +152,84 @@ public class DecoratorController {
     public ResponseEntity<List<Map<String, Object>>> textExamples() {
         List<Map<String, Object>> examples = new ArrayList<>();
         
+        // Example 1: Plain Text
+        // PlainText.getContent() = original text
+        // PlainText.getCost() = 1.00
+        Text text1 = new PlainText("Hello, World!");
         examples.add(createTextExample("Plain Text", "Hello, World!", 
-            Arrays.asList(), "Hello, World!", "$1.00", null));
+            Arrays.asList(), text1.getContent(), String.format("$%.2f", text1.getCost()), null));
+        
+        // Example 2: Uppercase Text
+        // UpperCaseDecorator.getContent() = text.getContent().toUpperCase()
+        // UpperCaseDecorator.getCost() = text.getCost() + 0.50
+        Text text2 = new UpperCaseDecorator(new PlainText("Hello, World!"));
         examples.add(createTextExample("Uppercase Text", "Hello, World!", 
-            Arrays.asList("uppercase"), "HELLO, WORLD!", "$1.50", null));
+            Arrays.asList("uppercase"), text2.getContent(), String.format("$%.2f", text2.getCost()), null));
+        
+        // Example 3: Bold Text
+        // BoldDecorator.getContent() = "<b>" + text.getContent() + "</b>"
+        // BoldDecorator.getCost() = text.getCost() + 0.30
+        Text text3 = new BoldDecorator(new PlainText("Hello, World!"));
         examples.add(createTextExample("Bold Text", "Hello, World!", 
-            Arrays.asList("bold"), "<b>Hello, World!</b>", "$1.30", null));
+            Arrays.asList("bold"), text3.getContent(), String.format("$%.2f", text3.getCost()), null));
+        
+        // Example 4: Bold and Italic Text
+        // Chain: PlainText -> BoldDecorator -> ItalicDecorator
+        // ItalicDecorator wraps the bold text with <i> tags
+        Text text4 = new ItalicDecorator(
+            new BoldDecorator(
+                new PlainText("Hello, World!")
+            )
+        );
         examples.add(createTextExample("Bold and Italic Text", "Hello, World!", 
-            Arrays.asList("bold", "italic"), "<i><b>Hello, World!</b></i>", "$1.60", null));
+            Arrays.asList("bold", "italic"), text4.getContent(), String.format("$%.2f", text4.getCost()), null));
+        
+        // Example 5: Bold, Italic, and Underlined Text
+        // Chain: PlainText -> BoldDecorator -> ItalicDecorator -> UnderlineDecorator
+        // Each decorator wraps the previous result
+        Text text5 = new UnderlineDecorator(
+            new ItalicDecorator(
+                new BoldDecorator(
+                    new PlainText("Important Message")
+                )
+            )
+        );
         examples.add(createTextExample("Bold, Italic, and Underlined Text", "Important Message", 
             Arrays.asList("bold", "italic", "underline"), 
-            "<u><i><b>Important Message</b></i></u>", "$1.80", null));
+            text5.getContent(), String.format("$%.2f", text5.getCost()), null));
+        
+        // Example 6: Uppercase and Bold Text
+        // Chain: PlainText -> UpperCaseDecorator -> BoldDecorator
+        // First converts to uppercase, then wraps with bold tags
+        Text text6 = new BoldDecorator(
+            new UpperCaseDecorator(
+                new PlainText("attention")
+            )
+        );
         examples.add(createTextExample("Uppercase and Bold Text", "attention", 
-            Arrays.asList("uppercase", "bold"), "<b>ATTENTION</b>", "$1.80", null));
+            Arrays.asList("uppercase", "bold"), text6.getContent(), String.format("$%.2f", text6.getCost()), null));
+        
+        // Example 7: Encrypted Text (Caesar Cipher, shift=3)
+        // EncryptDecorator.getContent() applies Caesar cipher
+        // EncryptDecorator.getCost() = text.getCost() + 1.50
+        Text text7 = new EncryptDecorator(new PlainText("Secret Message"), 3);
         examples.add(createTextExample("Encrypted Text (Caesar Cipher, shift=3)", "Secret Message", 
-            Arrays.asList("encrypt"), "Vhfuhw Phvvdjh", "$2.50", 3));
+            Arrays.asList("encrypt"), text7.getContent(), String.format("$%.2f", text7.getCost()), 3));
+        
+        // Example 8: Encrypted, Uppercase, and Bold
+        // Chain: PlainText -> EncryptDecorator -> UpperCaseDecorator -> BoldDecorator
+        // Order matters: encrypts first, then uppercases encrypted text, then bolds
+        Text text8 = new BoldDecorator(
+            new UpperCaseDecorator(
+                new EncryptDecorator(
+                    new PlainText("Confidential"),
+                    5
+                )
+            )
+        );
         examples.add(createTextExample("Encrypted, Uppercase, and Bold", "Confidential", 
             Arrays.asList("encrypt", "uppercase", "bold"), 
-            "<b>HTSKNIJSYNFQ</b>", "$3.30", 5));
+            text8.getContent(), String.format("$%.2f", text8.getCost()), 5));
         
         return ResponseEntity.ok(examples);
     }
