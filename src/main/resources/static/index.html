@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decorator Pattern Examples</title>
+</head>
+<body>
+    <div>
+        <header>
+            <h1>Decorator Pattern Examples</h1>
+            <p>Interactive demonstration of the Decorator Design Pattern in Java</p>
+        </header>
+
+        <div>
+            <div>
+                <h2>Coffee Shop Example</h2>
+                
+                <div>
+                    <h3>Build Your Coffee</h3>
+                    <div id="coffee-decorators">
+                        <button data-decorator="milk">Milk (+$0.50)</button>
+                        <button data-decorator="sugar">Sugar (+$0.20)</button>
+                        <button data-decorator="whipped_cream">Whipped Cream (+$0.70)</button>
+                        <button data-decorator="vanilla">Vanilla (+$0.60)</button>
+                        <button data-decorator="caramel">Caramel (+$0.60)</button>
+                    </div>
+                    <div id="coffee-order">Click decorators to add them (click multiple times to add same decorator multiple times)</div>
+                    
+                    <div id="coffee-result">
+                        <div>Simple Coffee</div>
+                        <div>Cost: $2.00</div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>Predefined Examples</h3>
+                    <div id="coffee-examples"></div>
+                </div>
+            </div>
+
+            <div>
+                <h2>Text Formatter Example</h2>
+                
+                <div>
+                    <h3>Format Your Text</h3>
+                    <input type="text" id="text-input" placeholder="Enter text to format..." value="Hello, World!">
+                    
+                    <div id="text-decorators">
+                        <button data-decorator="bold">Bold (+$0.30)</button>
+                        <button data-decorator="italic">Italic (+$0.30)</button>
+                        <button data-decorator="underline">Underline (+$0.20)</button>
+                        <button data-decorator="uppercase">Uppercase (+$0.50)</button>
+                        <button data-decorator="encrypt">
+                            Encrypt (+$1.50)
+                            <input type="number" id="encrypt-shift" value="3" min="1" max="25" onclick="event.stopPropagation()">
+                        </button>
+                    </div>
+                    <div id="text-order">Decorators are applied in the order you click them</div>
+                    
+                    <div id="text-result">
+                        <div id="text-content">Hello, World!</div>
+                        <div>Cost: $1.00</div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>Predefined Examples</h3>
+                    <div id="text-examples"></div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h2>About the Decorator Pattern</h2>
+            <p>
+                The <strong>Decorator Pattern</strong> is a structural design pattern that allows you to dynamically add new behaviors 
+                or responsibilities to objects without modifying their code. It provides a flexible alternative to subclassing for 
+                extending functionality.
+            </p>
+            
+            <h3>Key Benefits:</h3>
+            <ul>
+                <li>Each decorator adds one specific responsibility</li>
+                <li>Decorators can be combined in any order</li>
+                <li>The same decorator can be applied multiple times</li>
+                <li>No modification needed to the base classes</li>
+                <li>Easy to add new decorators without changing existing code</li>
+                <li>Cost/complexity accumulates transparently as decorators are added</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Coffee Shop Logic
+        let coffeeDecorators = [];
+        
+        document.getElementById('coffee-decorators').addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                const decorator = e.target.dataset.decorator;
+                coffeeDecorators.push(decorator);
+                updateCoffee();
+            }
+        });
+
+        async function updateCoffee() {
+            const response = await fetch('/api/coffee', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ decorators: coffeeDecorators })
+            });
+            const data = await response.json();
+            document.querySelector('#coffee-result div:first-child').textContent = data.description;
+            document.querySelector('#coffee-result div:last-child').textContent = `Cost: ${data.cost}`;
+            document.getElementById('coffee-order').textContent = 
+                coffeeDecorators.length > 0 
+                    ? `Applied decorators: ${coffeeDecorators.join(' → ')}`
+                    : 'Click decorators to add them (click multiple times to add same decorator multiple times)';
+        }
+
+        // Reset coffee
+        document.getElementById('coffee-result').addEventListener('dblclick', () => {
+            coffeeDecorators = [];
+            updateCoffee();
+        });
+
+        // Text Formatter Logic
+        let textDecorators = [];
+        
+        document.getElementById('text-decorators').addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                const decorator = e.target.dataset.decorator;
+                textDecorators.push(decorator);
+                updateText();
+            }
+        });
+
+        document.getElementById('text-input').addEventListener('input', () => {
+            textDecorators = [];
+            updateText();
+        });
+
+        async function updateText() {
+            const text = document.getElementById('text-input').value;
+            const encryptShift = parseInt(document.getElementById('encrypt-shift').value);
+            
+            const response = await fetch('/api/text', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    text: text,
+                    decorators: textDecorators,
+                    encrypt_shift: encryptShift
+                })
+            });
+            const data = await response.json();
+            document.getElementById('text-content').innerHTML = data.content;
+            document.querySelector('#text-result div:last-child').textContent = `Cost: ${data.cost}`;
+            document.getElementById('text-order').textContent = 
+                textDecorators.length > 0 
+                    ? `Applied decorators: ${textDecorators.join(' → ')}`
+                    : 'Decorators are applied in the order you click them';
+        }
+
+        // Reset text
+        document.getElementById('text-result').addEventListener('dblclick', () => {
+            textDecorators = [];
+            updateText();
+        });
+
+        // Load predefined examples
+        async function loadCoffeeExamples() {
+            const response = await fetch('/api/coffee/examples');
+            const examples = await response.json();
+            const container = document.getElementById('coffee-examples');
+            
+            examples.forEach(example => {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <h4>${example.name}</h4>
+                    <p>${example.description} - ${example.cost}</p>
+                `;
+                div.addEventListener('click', () => {
+                    coffeeDecorators = [...example.decorators];
+                    updateCoffee();
+                });
+                container.appendChild(div);
+            });
+        }
+
+        async function loadTextExamples() {
+            const response = await fetch('/api/text/examples');
+            const examples = await response.json();
+            const container = document.getElementById('text-examples');
+            
+            examples.forEach(example => {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <h4>${example.name}</h4>
+                    <p>${example.content} - ${example.cost}</p>
+                `;
+                div.addEventListener('click', () => {
+                    document.getElementById('text-input').value = example.text;
+                    textDecorators = [...example.decorators];
+                    if (example.encrypt_shift) {
+                        document.getElementById('encrypt-shift').value = example.encrypt_shift;
+                    }
+                    updateText();
+                });
+                container.appendChild(div);
+            });
+        }
+
+        // Initialize
+        loadCoffeeExamples();
+        loadTextExamples();
+    </script>
+</body>
+</html>

@@ -14,10 +14,14 @@ instance/
 venv/
 env/
 
-# Java (legacy)
+# Java
 *.jar
 *.war
 *.ear
+target/
+.mvn/
+mvnw
+mvnw.cmd
 
 # IDE
 .vscode/
