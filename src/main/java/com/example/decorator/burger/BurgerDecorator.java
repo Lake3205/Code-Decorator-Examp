@@ -12,4 +12,7 @@ public abstract class BurgerDecorator implements Burger {
 
     @Override
     public abstract double getCost();
+
+    @Override
+    public abstract String getSentencePart();
 }

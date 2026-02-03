@@ -96,7 +96,7 @@
         </header>
 
         <div>
-            <div>
+            <div style="display:none">
                 <h2>Coffee Shop Example</h2>
                 
                 <div>
@@ -144,10 +144,11 @@
                         <div>Simple Burger</div>
                         <div>Cost: $5.00</div>
                     </div>
+                    <p id="burger-sentence" style="font-style: italic; margin-top: 10px;"></p>
                 </div>
             </div>
 
-            <div>
+            <div style="display:none">
                 <h2>Text Formatter Example</h2>
                 
                 <div>
@@ -301,6 +302,7 @@
             
             // Update visual burger
             renderBurgerVisual();
+            document.getElementById('burger-sentence').textContent = data.sentence || '';
         }
 
         function renderBurgerVisual() {

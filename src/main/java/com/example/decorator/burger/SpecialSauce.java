@@ -14,4 +14,10 @@ public class SpecialSauce extends BurgerDecorator {
     public double getCost() {
         return burger.getCost() + 0.50;
     }
+
+    @Override
+    public String getSentencePart() {
+        String prev = burger.getSentencePart();
+        return prev.isEmpty() ? "special sauce" : prev + ", special sauce";
+    }
 }

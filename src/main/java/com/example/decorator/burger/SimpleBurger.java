@@ -10,4 +10,9 @@ public class SimpleBurger implements Burger {
     public double getCost() {
         return 5.00;
     }
+
+    @Override
+    public String getSentencePart() {
+        return "";
+    }
 }

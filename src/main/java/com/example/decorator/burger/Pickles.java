@@ -14,4 +14,10 @@ public class Pickles extends BurgerDecorator {
     public double getCost() {
         return burger.getCost() + 0.25;
     }
+
+    @Override
+    public String getSentencePart() {
+        String prev = burger.getSentencePart();
+        return prev.isEmpty() ? "some pickles" : prev + ", some pickles";
+    }
 }

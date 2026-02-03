@@ -14,4 +14,10 @@ public class Onions extends BurgerDecorator {
     public double getCost() {
         return burger.getCost() + 0.35;
     }
+
+    @Override
+    public String getSentencePart() {
+        String prev = burger.getSentencePart();
+        return prev.isEmpty() ? "diced onions" : prev + ", diced onions";
+    }
 }

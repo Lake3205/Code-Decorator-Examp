@@ -94,6 +94,10 @@ public class DecoratorController {
         response.put("description", burger.getDescription());
         response.put("cost", String.format("$%.2f", burger.getCost()));
         
+        String sentencePart = burger.getSentencePart();
+        String sentence = sentencePart.isEmpty() ? "" : "The burger has " + sentencePart + ".";
+        response.put("sentence", sentence);
+        
         return ResponseEntity.ok(response);
     }
 

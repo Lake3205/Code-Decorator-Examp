@@ -14,4 +14,10 @@ public class Bacon extends BurgerDecorator {
     public double getCost() {
         return burger.getCost() + 1.50;
     }
+
+    @Override
+    public String getSentencePart() {
+        String prev = burger.getSentencePart();
+        return prev.isEmpty() ? "crispy bacon" : prev + ", crispy bacon";
+    }
 }

@@ -14,4 +14,10 @@ public class Lettuce extends BurgerDecorator {
     public double getCost() {
         return burger.getCost() + 0.30;
     }
+
+    @Override
+    public String getSentencePart() {
+        String prev = burger.getSentencePart();
+        return prev.isEmpty() ? "a leaf of lettuce" : prev + ", a leaf of lettuce";
+    }
 }

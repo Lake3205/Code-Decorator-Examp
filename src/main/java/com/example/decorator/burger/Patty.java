@@ -14,4 +14,10 @@ public class Patty extends BurgerDecorator {
     public double getCost() {
         return burger.getCost() + 2.50;
     }
+
+    @Override
+    public String getSentencePart() {
+        String prev = burger.getSentencePart();
+        return prev.isEmpty() ? "an extra patty" : prev + ", an extra patty";
+    }
 }

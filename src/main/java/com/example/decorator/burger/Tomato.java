@@ -14,4 +14,10 @@ public class Tomato extends BurgerDecorator {
     public double getCost() {
         return burger.getCost() + 0.40;
     }
+
+    @Override
+    public String getSentencePart() {
+        String prev = burger.getSentencePart();
+        return prev.isEmpty() ? "a slice of tomato" : prev + ", a slice of tomato";
+    }
 }
