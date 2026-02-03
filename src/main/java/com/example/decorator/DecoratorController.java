@@ -2,6 +2,7 @@ package com.example.decorator;
 
 import com.example.decorator.coffee.*;
 import com.example.decorator.text.*;
+import com.example.decorator.burger.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +46,50 @@ public class DecoratorController {
         Map<String, String> response = new HashMap<>();
         response.put("description", coffee.getDescription());
         response.put("cost", String.format("$%.2f", coffee.getCost()));
+        
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/burger")
+    public ResponseEntity<Map<String, String>> createBurger(@RequestBody Map<String, Object> request) {
+        List<String> decorators = (List<String>) request.get("decorators");
+        
+        Burger burger = new SimpleBurger();
+        
+        if (decorators != null) {
+            for (String decorator : decorators) {
+                switch (decorator) {
+                    case "cheese":
+                        burger = new Cheese(burger);
+                        break;
+                    case "lettuce":
+                        burger = new Lettuce(burger);
+                        break;
+                    case "tomato":
+                        burger = new Tomato(burger);
+                        break;
+                    case "bacon":
+                        burger = new Bacon(burger);
+                        break;
+                    case "pickles":
+                        burger = new Pickles(burger);
+                        break;
+                    case "onions":
+                        burger = new Onions(burger);
+                        break;
+                    case "special_sauce":
+                        burger = new SpecialSauce(burger);
+                        break;
+                    default:
+                        // Ignore unknown decorators
+                        break;
+                }
+            }
+        }
+        
+        Map<String, String> response = new HashMap<>();
+        response.put("description", burger.getDescription());
+        response.put("cost", String.format("$%.2f", burger.getCost()));
         
         return ResponseEntity.ok(response);
     }
@@ -144,6 +189,79 @@ public class DecoratorController {
         examples.add(createExample("Extra Sweet Coffee", 
             Arrays.asList("sugar", "sugar", "milk"), 
             coffee5.getDescription(), String.format("$%.2f", coffee5.getCost())));
+        
+        return ResponseEntity.ok(examples);
+    }
+
+    @GetMapping("/burger/examples")
+    public ResponseEntity<List<Map<String, Object>>> burgerExamples() {
+        List<Map<String, Object>> examples = new ArrayList<>();
+        
+        // Example 1: Simple Burger
+        Burger burger1 = new SimpleBurger();
+        examples.add(createExample("Simple Burger", 
+            Arrays.asList(), burger1.getDescription(), String.format("$%.2f", burger1.getCost())));
+        
+        // Example 2: Cheeseburger
+        Burger burger2 = new Cheese(new SimpleBurger());
+        examples.add(createExample("Cheeseburger", 
+            Arrays.asList("cheese"), burger2.getDescription(), String.format("$%.2f", burger2.getCost())));
+        
+        // Example 3: Classic Burger
+        // Chain: SimpleBurger -> Cheese -> Lettuce -> Tomato
+        Burger burger3 = new Tomato(
+            new Lettuce(
+                new Cheese(
+                    new SimpleBurger()
+                )
+            )
+        );
+        examples.add(createExample("Classic Burger", 
+            Arrays.asList("cheese", "lettuce", "tomato"), 
+            burger3.getDescription(), String.format("$%.2f", burger3.getCost())));
+        
+        // Example 4: Bacon Cheeseburger
+        // Chain: SimpleBurger -> Cheese -> Bacon
+        Burger burger4 = new Bacon(
+            new Cheese(
+                new SimpleBurger()
+            )
+        );
+        examples.add(createExample("Bacon Cheeseburger", 
+            Arrays.asList("cheese", "bacon"), 
+            burger4.getDescription(), String.format("$%.2f", burger4.getCost())));
+        
+        // Example 5: Deluxe Burger
+        // Chain: SimpleBurger -> Cheese -> Bacon -> Lettuce -> Tomato -> Pickles -> Onions -> Special Sauce
+        Burger burger5 = new SpecialSauce(
+            new Onions(
+                new Pickles(
+                    new Tomato(
+                        new Lettuce(
+                            new Bacon(
+                                new Cheese(
+                                    new SimpleBurger()
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        );
+        examples.add(createExample("Deluxe Burger", 
+            Arrays.asList("cheese", "bacon", "lettuce", "tomato", "pickles", "onions", "special_sauce"), 
+            burger5.getDescription(), String.format("$%.2f", burger5.getCost())));
+        
+        // Example 6: Double Cheese Burger
+        // Demonstrates adding same decorator multiple times
+        Burger burger6 = new Cheese(
+            new Cheese(
+                new SimpleBurger()
+            )
+        );
+        examples.add(createExample("Double Cheese Burger", 
+            Arrays.asList("cheese", "cheese"), 
+            burger6.getDescription(), String.format("$%.2f", burger6.getCost())));
         
         return ResponseEntity.ok(examples);
     }

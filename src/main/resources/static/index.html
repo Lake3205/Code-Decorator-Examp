@@ -35,6 +35,29 @@
             </div>
 
             <div>
+                <h2>Burger Builder Example</h2>
+                
+                <div>
+                    <h3>Build Your Burger</h3>
+                    <div id="burger-decorators">
+                        <button data-decorator="cheese">Cheese (+$0.75)</button>
+                        <button data-decorator="lettuce">Lettuce (+$0.30)</button>
+                        <button data-decorator="tomato">Tomato (+$0.40)</button>
+                        <button data-decorator="bacon">Bacon (+$1.50)</button>
+                        <button data-decorator="pickles">Pickles (+$0.25)</button>
+                        <button data-decorator="onions">Onions (+$0.35)</button>
+                        <button data-decorator="special_sauce">Special Sauce (+$0.50)</button>
+                    </div>
+                    <div id="burger-order">Click decorators to add toppings (click multiple times to add extra)</div>
+                    
+                    <div id="burger-result">
+                        <div>Simple Burger</div>
+                        <div>Cost: $5.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
                 <h2>Text Formatter Example</h2>
                 
                 <div>
@@ -156,6 +179,38 @@
         document.getElementById('text-result').addEventListener('dblclick', () => {
             textDecorators = [];
             updateText();
+        });
+
+        // Burger Builder Logic
+        let burgerDecorators = [];
+        
+        document.getElementById('burger-decorators').addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                const decorator = e.target.dataset.decorator;
+                burgerDecorators.push(decorator);
+                updateBurger();
+            }
+        });
+
+        async function updateBurger() {
+            const response = await fetch('/api/burger', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ decorators: burgerDecorators })
+            });
+            const data = await response.json();
+            document.querySelector('#burger-result div:first-child').textContent = data.description;
+            document.querySelector('#burger-result div:last-child').textContent = `Cost: ${data.cost}`;
+            document.getElementById('burger-order').textContent = 
+                burgerDecorators.length > 0 
+                    ? `Applied toppings: ${burgerDecorators.join(' → ')}`
+                    : 'Click decorators to add toppings (click multiple times to add extra)';
+        }
+
+        // Reset burger
+        document.getElementById('burger-result').addEventListener('dblclick', () => {
+            burgerDecorators = [];
+            updateBurger();
         });
     </script>
 </body>
