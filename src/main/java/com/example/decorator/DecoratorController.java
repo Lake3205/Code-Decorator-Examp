@@ -35,6 +35,9 @@ public class DecoratorController {
                     case "caramel":
                         coffee = new Caramel(coffee);
                         break;
+                    default:
+                        // Ignore unknown decorators
+                        break;
                 }
             }
         }
@@ -71,6 +74,9 @@ public class DecoratorController {
                         break;
                     case "encrypt":
                         text = new EncryptDecorator(text, encryptShift);
+                        break;
+                    default:
+                        // Ignore unknown decorators
                         break;
                 }
             }
