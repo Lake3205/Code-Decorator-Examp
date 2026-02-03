@@ -1,8 +1,5 @@
 package com.example.decorator.coffee;
 
-/**
- * Concrete Decorator - Adds caramel flavoring to the coffee
- */
 public class Caramel extends CoffeeDecorator {
     public Caramel(Coffee coffee) {
         super(coffee);

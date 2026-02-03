@@ -1,8 +1,5 @@
 package com.example.decorator.text;
 
-/**
- * Concrete Decorator - Converts text to uppercase
- */
 public class UpperCaseDecorator extends TextDecorator {
     public UpperCaseDecorator(Text text) {
         super(text);

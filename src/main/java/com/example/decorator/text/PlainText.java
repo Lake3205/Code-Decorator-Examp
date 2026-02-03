@@ -1,8 +1,5 @@
 package com.example.decorator.text;
 
-/**
- * Concrete Component - Basic text without any formatting
- */
 public class PlainText implements Text {
     private String content;
 

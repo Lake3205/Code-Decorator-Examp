@@ -1,8 +1,5 @@
 package com.example.decorator.coffee;
 
-/**
- * Concrete Component - Basic coffee without any additions
- */
 public class SimpleCoffee implements Coffee {
     @Override
     public String getDescription() {

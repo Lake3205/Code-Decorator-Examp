@@ -1,8 +1,5 @@
 package com.example.decorator.text;
 
-/**
- * Concrete Decorator - Wraps text with HTML italic tags
- */
 public class ItalicDecorator extends TextDecorator {
     public ItalicDecorator(Text text) {
         super(text);

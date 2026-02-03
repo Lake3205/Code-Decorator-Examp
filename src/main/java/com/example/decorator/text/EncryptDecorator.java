@@ -1,8 +1,5 @@
 package com.example.decorator.text;
 
-/**
- * Concrete Decorator - Encrypts text using Caesar cipher
- */
 public class EncryptDecorator extends TextDecorator {
     private int shift;
 
